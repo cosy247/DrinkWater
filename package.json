@@ -1,0 +1,17 @@
+{
+    "name": "software",
+    "main": "main.js",
+    "version": "0.0.1",
+    "author": "Cosy247",
+    "description": "Cosy247",
+    "scripts": {
+        "dev.": "electron .",
+        "dev": "electron-forge start",
+        "make": "electron-forge make",
+        "package": "electron-forge package"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.5",
+        "electron": "^23.1.1"
+    }
+}
