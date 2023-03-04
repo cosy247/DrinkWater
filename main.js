@@ -2,6 +2,7 @@ const { app, Tray, Menu, Notification } = require('electron');
 const fs = require('fs')
 
 // 定义变量
+const appName = "DrinkWater";
 let tray = null;
 let config = {};
 let nextTime = 0;
@@ -24,18 +25,29 @@ function updateConfig() {
     })
 }
 
+// 修改开机是否启动
+function changeOpenAtLogin() {
+    const isOpenAtLogin = app.getLoginItemSettings().openAtLogin;
+    app.setLoginItemSettings({
+        openAtLogin: !isOpenAtLogin,
+        path: process.execPath
+    })
+}
+
 // 定义托盘
 function initTray() {
+    const isOpenAtLogin = app.getLoginItemSettings().openAtLogin;
     tray = new Tray('./imgs/icon.png');
     tray.setContextMenu(
         Menu.buildFromTemplate([
             { label: '时间间隔', icon: './imgs/time.png', enabled: false },
-            { label: '30分钟', type: 'radio', click() { startTime(30) }, checked: true },
-            { label: '35分钟', type: 'radio', click() { startTime(35) } },
-            { label: '40分钟', type: 'radio', click() { startTime(40) } },
-            { label: '45分钟', type: 'radio', click() { startTime(45) } },
-            { label: '50分钟', type: 'radio', click() { startTime(50) } },
+            { label: '30分钟', type: 'radio', click() { startTime(30) }, checked: config.timeSpan == 30 },
+            { label: '35分钟', type: 'radio', click() { startTime(35) }, checked: config.timeSpan == 35 },
+            { label: '40分钟', type: 'radio', click() { startTime(40) }, checked: config.timeSpan == 40 },
+            { label: '45分钟', type: 'radio', click() { startTime(45) }, checked: config.timeSpan == 45 },
+            { label: '50分钟', type: 'radio', click() { startTime(50) }, checked: config.timeSpan == 50 },
             { type: 'separator' },
+            { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin},
             { label: '退出', icon:'./imgs/out.png', role: 'quit' }
         ])
     )
@@ -63,7 +75,10 @@ function startTime(time) {
 }
     
 // 初始化
+app.setAppUserModelId('appName');
 app.on('ready', () => {
-    initTray();
-    getConfig(startTime);
+    getConfig(() => {
+        initTray();
+        startTime();
+    });
 });
