@@ -29,14 +29,14 @@ function initTray() {
     tray = new Tray('./imgs/icon.png');
     tray.setContextMenu(
         Menu.buildFromTemplate([
-            { label: '⏰时间间隔', enabled: false },
+            { label: '时间间隔', icon: './imgs/time.png', enabled: false },
             { label: '30分钟', type: 'radio', click() { startTime(30) }, checked: true },
             { label: '35分钟', type: 'radio', click() { startTime(35) } },
             { label: '40分钟', type: 'radio', click() { startTime(40) } },
             { label: '45分钟', type: 'radio', click() { startTime(45) } },
             { label: '50分钟', type: 'radio', click() { startTime(50) } },
             { type: 'separator' },
-            { label: '🌀退出', role: 'quit' }
+            { label: '退出', icon:'./imgs/out.png', role: 'quit' }
         ])
     )
 }
