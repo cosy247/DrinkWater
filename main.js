@@ -1,4 +1,4 @@
-const { app, Tray, Menu, Notification } = require('electron');
+const { app, shell, Tray, Menu, Notification } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -33,6 +33,11 @@ function changeOpenAtLogin() {
         openAtLogin: !isOpenAtLogin,
         path: process.execPath,
     });
+}
+
+// 打开浏览器详情页面
+function openInfoPage() {
+    shell.openExternal('https://github.com/cosy247/DrinkWater');
 }
 
 // 定义托盘
@@ -82,6 +87,8 @@ function initTray() {
                 },
                 checked: config.timeSpan == 50,
             },
+            { type: 'separator' },
+            { label: '关于&反馈', icon: path.resolve(__dirname, './imgs/info.png'), click: openInfoPage },
             { type: 'separator' },
             { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin },
             { label: '退出', icon: path.resolve(__dirname, './imgs/out.png'), role: 'quit' },
