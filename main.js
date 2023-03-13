@@ -37,7 +37,7 @@ function changeOpenAtLogin() {
 
 // 打开浏览器详情页面
 function openInfoPage() {
-    shell.openExternal('https://github.com/cosy247/DrinkWater#%E5%85%B3%E4%BA%8E');
+    shell.openExternal('https://github.com/cosy247/DrinkWater#%E5%85%B3%E4%BA%8E%E5%8F%8D%E9%A6%88');
 }
 
 // 定义托盘
