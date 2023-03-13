@@ -1,7 +1,7 @@
 {
     "name": "drink_water",
     "main": "main.js",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "author": "Cosy247",
     "description": "Cosy247",
     "scripts": {
@@ -31,7 +31,7 @@
             "uninstallerIcon": "./icons/icon256.ico",
             "installerHeaderIcon": "./icons/icon256.ico",
             "createDesktopShortcut": false,
-            "createStartMenuShortcut": false,
+            "createStartMenuShortcut": true,
             "shortcutName": "DrinkWater"
         }
     }
