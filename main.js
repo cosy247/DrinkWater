@@ -110,11 +110,15 @@ function startTime(time) {
     }, 1000 * 60 * config.timeSpan);
 }
 
-// 初始化
-app.setAppUserModelId('appName');
-app.on('ready', () => {
-    getConfig(() => {
-        initTray();
-        startTime();
+// 初始化，限制只可以开启一个程序
+if (app.requestSingleInstanceLock({ myKey: 'myValue' })) {
+    app.setAppUserModelId('appName');
+    app.on('ready', () => {
+        getConfig(() => {
+            initTray();
+            startTime();
+        });
     });
-});
+} else {
+    app.quit();
+}
