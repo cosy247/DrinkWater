@@ -112,20 +112,20 @@ function startTime(time) {
     timeoutId && clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
         timeoutId = null;
-        new Notification({ title: '💧💧', body: '接点水喝吧！💧💧' }).show();
+        new Notification({ body: `喝点水吧！${['🍸', '🥛', '🍹', '🥤', '🧋'][Math.floor(Math.random() * 5)].repeat(2)}` }).show();
         startTime();
     }, 1000 * 60 * config.timeSpan);
 }
 
 // 初始化，限制只可以开启一个程序
 if (app.requestSingleInstanceLock({ myKey: 'myValue' })) {
-    app.setAppUserModelId('appName');
+    app.setAppUserModelId(appName);
     app.on('ready', () => {
         getConfig(() => {
             initTray();
             startTime();
         });
-        new Notification({ title: 'DrinkWater💧', body: 'DrinkWater启动成功💧💧' }).show();
+        new Notification({ body: '启动成功！😎😎' }).show();
     });
 } else {
     app.quit();
