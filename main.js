@@ -118,6 +118,7 @@ if (app.requestSingleInstanceLock({ myKey: 'myValue' })) {
             initTray();
             startTime();
         });
+        new Notification({ title: 'DrinkWater💧', body: 'DrinkWater启动成功💧💧' }).show();
     });
 } else {
     app.quit();
