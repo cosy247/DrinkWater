@@ -9,6 +9,7 @@ let config = {};
 let nextTime = 0;
 let timeoutId = null;
 let isPaused = false;
+let dayWaterCount = 0;
 
 // 获取配置文件
 function getConfig(callback) {
@@ -26,6 +27,11 @@ function updateConfig() {
     });
 }
 
+// 更新托盘标题
+function updateTrayTitle() {
+    tray.setToolTip(`---DrinkWarter---\n提醒间隔：${config.timeSpan}分钟\n下次提醒：${new Date(nextTime).toString().slice(16, 21)}\n今日喝水：${config.dayWaterCount}`);
+}
+
 // 修改开机是否启动
 function changeOpenAtLogin() {
     const isOpenAtLogin = app.getLoginItemSettings().openAtLogin;
@@ -33,6 +39,13 @@ function changeOpenAtLogin() {
         openAtLogin: !isOpenAtLogin,
         path: process.execPath,
     });
+}
+
+// 今日喝水加一
+function dayWaterAdd() {
+    config.dayWaterCount++;
+    updateTrayTitle();
+    updateConfig();
 }
 
 // 打开浏览器详情页面
@@ -88,12 +101,24 @@ function initTray() {
                 checked: config.timeSpan == 50,
             },
             { type: 'separator' },
+            { label: '喝水加一', icon: path.resolve(__dirname, './imgs/water.png'), click: dayWaterAdd },
+            { type: 'separator' },
             { label: '关于&反馈', icon: path.resolve(__dirname, './imgs/info.png'), click: openInfoPage },
             { type: 'separator' },
             { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin },
             { label: '退出', icon: path.resolve(__dirname, './imgs/out.png'), role: 'quit' },
         ])
     );
+}
+
+// 初始化喝水计数
+function initDayWaterCount() {
+    const today = new Date().toLocaleDateString();
+    if (today !== config.lastDate) {
+        config.lastDate = today;
+        config.dayWaterCount = 0;
+        updateConfig();
+    }
 }
 
 // 设置循环计时流程
@@ -106,7 +131,7 @@ function startTime(time) {
 
     // 获取下一次时间并更新标题
     nextTime = new Date().getTime() + config.timeSpan * 60 * 1000;
-    tray.setToolTip(`---DrinkWarter---\n提醒间隔：${config.timeSpan}分钟\n下次提醒：${new Date(nextTime).toString().slice(16, 21)}`);
+    updateTrayTitle();
 
     // 开始计时
     timeoutId && clearTimeout(timeoutId);
@@ -123,6 +148,7 @@ if (app.requestSingleInstanceLock({ myKey: 'myValue' })) {
     app.on('ready', () => {
         getConfig(() => {
             initTray();
+            initDayWaterCount();
             startTime();
         });
         new Notification({ body: '启动成功！😎😎' }).show();
