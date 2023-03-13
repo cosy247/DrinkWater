@@ -14,24 +14,14 @@
     },
     "build": {
         "productName": "DrinkWater",
+        "artifactName": "${productName}-v${version}-${platform}-setup.${ext}",
         "appId": "com.Cosy247.DrinkWater",
         "copyright": "https://github.com/cosy247",
         "directories": {
             "output": "build"
         },
         "win": {
-            "icon": "./icons/icon256.ico",
-            "target": [
-                {
-                    "target": "nsis"
-                }
-            ]
-        },
-        "mac": {
-            "icon": "build/icons/icon.icns"
-        },
-        "linux": {
-            "icon": "build/icons"
+            "icon": "./icons/icon256.ico"
         },
         "nsis": {
             "oneClick": false,
