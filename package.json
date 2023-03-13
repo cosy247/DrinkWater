@@ -5,13 +5,44 @@
     "author": "Cosy247",
     "description": "Cosy247",
     "scripts": {
-        "dev.": "electron .",
-        "dev": "electron-forge start",
-        "make": "electron-forge make",
-        "package": "electron-forge package"
+        "dev": "electron .",
+        "build": "electron-builder build"
     },
     "devDependencies": {
-        "@electron-forge/cli": "^6.0.5",
-        "electron": "^23.1.1"
+        "electron": "^23.1.1",
+        "electron-builder": "^23.6.0"
+    },
+    "build": {
+        "productName": "DrinkWater",
+        "appId": "com.Cosy247.DrinkWater",
+        "copyright": "https://github.com/cosy247",
+        "directories": {
+            "output": "build"
+        },
+        "win": {
+            "icon": "./icons/icon256.ico",
+            "target": [
+                {
+                    "target": "nsis"
+                }
+            ]
+        },
+        "mac": {
+            "icon": "build/icons/icon.icns"
+        },
+        "linux": {
+            "icon": "build/icons"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowElevation": true,
+            "allowToChangeInstallationDirectory": true,
+            "installerIcon": "./icons/icon256.ico",
+            "uninstallerIcon": "./icons/icon256.ico",
+            "installerHeaderIcon": "./icons/icon256.ico",
+            "createDesktopShortcut": false,
+            "createStartMenuShortcut": false,
+            "shortcutName": "DrinkWater"
+        }
     }
 }
