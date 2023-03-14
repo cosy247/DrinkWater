@@ -1,4 +1,4 @@
-const { app, shell, Tray, Menu, Notification } = require('electron');
+const { app, shell, Tray, Menu, Notification, powerMonitor } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -45,6 +45,12 @@ function changeOpenAtLogin() {
 function dayWaterAdd() {
     config.dayWaterCount++;
     updateTrayTitle();
+    updateConfig();
+}
+
+// 息屏暂停提醒
+function setPauseOnScreenClosed(pause) {
+    config.pauseOnScreenClosed = pause;
     updateConfig();
 }
 
@@ -114,7 +120,7 @@ function initTray() {
             },
             { type: 'separator' },
             { label: '设置', icon: path.resolve(__dirname, './imgs/setting.png'), enabled: false },
-            { label: '息屏暂停', type: 'checkbox', checked: false, click: dayWaterAdd },
+            { label: '息屏暂停', type: 'checkbox', checked: false, click: setPauseOnScreenClosed },
             { label: '暂停提醒', type: 'checkbox', checked: false, click: pauseNotify },
             { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin },
             { type: 'separator' },
@@ -155,6 +161,28 @@ function startTime(time) {
         new Notification({ body: `喝点水吧！${['🍸', '🥛', '🍹', '🥤', '🧋'][Math.floor(Math.random() * 5)].repeat(2)}` }).show();
         startTime();
     }, 1000 * 60 * config.timeSpan);
+}
+
+// 监听屏幕状态
+function listenerScreen() {
+    powerMonitor.on('suspend', () => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    });
+    powerMonitor.on('resume', () => {
+        timeoutId || startTime();
+    });
+    powerMonitor.on('lock-screen', () => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    });
+    powerMonitor.on('unlock-screen', () => {
+        timeoutId || startTime();
+    });
 }
 
 // 初始化，限制只可以开启一个程序
