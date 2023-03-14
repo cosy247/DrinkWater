@@ -29,7 +29,7 @@ function updateConfig() {
 
 // 更新托盘标题
 function updateTrayTitle() {
-    tray.setToolTip(`---DrinkWarter---\n提醒间隔：${config.timeSpan}分钟\n下次提醒：${new Date(nextTime).toString().slice(16, 21)}\n今日喝水：${config.dayWaterCount}`);
+    tray.setToolTip(`---DrinkWarter---\n提醒间隔：${config.timeSpan}分钟\n下次提醒：${isPaused ? '已暂停' : new Date(nextTime).toString().slice(16, 21)}\n今日喝水：${config.dayWaterCount}`);
 }
 
 // 修改开机是否启动
@@ -46,6 +46,18 @@ function dayWaterAdd() {
     config.dayWaterCount++;
     updateTrayTitle();
     updateConfig();
+}
+
+// 暂停提醒
+function pauseNotify(pause) {
+    isPaused = pause;
+    if (pause) {
+        timeoutId && clearTimeout(timeoutId);
+        timeoutId = null;
+    } else {
+        startTime();
+    }
+    updateTrayTitle();
 }
 
 // 打开浏览器详情页面
@@ -101,11 +113,14 @@ function initTray() {
                 checked: config.timeSpan == 50,
             },
             { type: 'separator' },
+            { label: '设置', icon: path.resolve(__dirname, './imgs/setting.png'), enabled: false },
+            { label: '息屏暂停', type: 'checkbox', checked: false, click: dayWaterAdd },
+            { label: '暂停提醒', type: 'checkbox', checked: false, click: pauseNotify },
+            { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin },
+            { type: 'separator' },
             { label: '喝水加一', icon: path.resolve(__dirname, './imgs/water.png'), click: dayWaterAdd },
             { type: 'separator' },
             { label: '关于&反馈', icon: path.resolve(__dirname, './imgs/info.png'), click: openInfoPage },
-            { type: 'separator' },
-            { label: '开机启动', type: 'checkbox', checked: isOpenAtLogin, click: changeOpenAtLogin },
             { label: '退出', icon: path.resolve(__dirname, './imgs/out.png'), role: 'quit' },
         ])
     );
